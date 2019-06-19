@@ -68,7 +68,7 @@ The build guidelines: https://llvm.org/docs/CMake.html
 
 3. Running the tool on the GDB 7.11 binary by ignoring debug entry values:
 
- *bin/llvm-locstats gdb*
+ *bin/llvm-locstats --ignore-entry-values gdb*
  
     =================================================
               Debug Location Statistics
