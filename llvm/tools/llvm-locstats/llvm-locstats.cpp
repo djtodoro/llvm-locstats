@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This program is a utility that works like "locstats".
+// This program is a utility that works like debug location coverage calculator.
 //
 //===----------------------------------------------------------------------===//
 
@@ -25,6 +25,11 @@
 #define DEBUG_TYPE "locstats"
 using namespace llvm;
 using namespace object;
+
+/// This represents the largest category of debug location coverage being
+/// calculated. The first category is 0% location coverage, but the last
+/// category is 100% location coverage.
+static const int largest_cov_category = 12;
 
 /// @}
 /// Command line options.
@@ -170,7 +175,7 @@ static void collectLocStatsForDie(DWARFDie Die, uint64_t ScopeLowPC,
   if (CoverageRounded == 0)
     PercentageKey = 0;
   else if (CoverageRounded == 100)
-    PercentageKey = 11;
+    PercentageKey = largest_cov_category - 1;
   else
     PercentageKey = CoverageRounded / 10 + 1;
 
@@ -266,7 +271,7 @@ static void outputLocStats(std::map<int, unsigned long> &LocStatistics,
                        8)
      << "%\n";
   for (unsigned i = 2; i < 11; ++i)
-    OS << "    " << (i-1) * 10 + 1 << ".." << i * 10 - 1 << "    "
+    OS << "    " << (i - 1) * 10 + 1 << ".." << i * 10 - 1 << "    "
        << format_decimal(LocStatistics[i], 8) << "        "
        << format_decimal((int)(LocStatistics[i] / (double)CumulNumOfVars * 100),
                          8)
@@ -287,7 +292,7 @@ static void collectLocstats(ObjectFile &Obj, DWARFContext &DICtx,
                             Twine Filename, raw_ostream &OS) {
   // Map percentage->occurrences.
   std::map<int, unsigned long> LocStatistics;
-  for (int i = 0; i < 12; ++i)
+  for (int i = 0; i < largest_cov_category; ++i)
     LocStatistics[i] = 0;
 
   unsigned CumulNumOfVars = 0;
