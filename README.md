@@ -1,5 +1,7 @@
 # The llvm-locstats
 
+NOTE: This was upstreamed into official `llvm-project`!
+
 This tool calculates and reports verbose output for the debug location coverage of a binary.
 
 It is very similar to a tool (locstats) from the Elfutils package, but the tool is not
